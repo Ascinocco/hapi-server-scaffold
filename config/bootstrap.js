@@ -25,6 +25,7 @@ if (env === 'dev') {
 }
 
 module.exports = {
+    hapi: config.hapi,
     mongoURL: mongoURL,
     server: serverConfig,
     secret: secret

@@ -7,7 +7,7 @@ let routes = require('./routes/routes.js');
 let authMiddleware = require('./middleware/auth.middleware.js');
 
 const Hapi = require('hapi');
-const server = new Hapi.Server();
+const server = new Hapi.Server(config.hapi);
 
 // server config
 server.connection(config.server.http); // http
