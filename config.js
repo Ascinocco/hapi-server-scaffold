@@ -1,13 +1,29 @@
+let fs = require('fs');
+
 module.exports = {
     server: {
         prod: {
-            port: 80,
-            host: ''
+            http: {
+                port: 80,
+                host: ''
+            },
+
+            https: {
+                port: 443,
+                host: ''
+            }
         },
 
         dev: {
-            port: 3000,
-            host: 'localhost'
+            http: {
+                port: 3000,
+                host: 'localhost'
+            },
+
+            https: {
+                port: 3443,
+                host: 'localhost'
+            }
         }
     },
 
@@ -34,5 +50,10 @@ module.exports = {
         dev: {
             secret: 'ChangeTheSecretBeforeUsingThisPls'
         }
+    },
+
+    tls: {
+        key: fs.readFileSync('./certs/server.key'),
+        cert: fs.readFileSync('./certs/server.crt')
     }
 };

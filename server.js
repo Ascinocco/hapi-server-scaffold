@@ -20,16 +20,36 @@ let serverConfig = {};
 
 if (env === 'dev') {
     mongoURL = config.db.dev.url + config.db.dev.port + config.db.dev.store;
-    serverConfig = config.server.dev;
+    serverConfig = {
+        http: config.server.dev.http,
+        https: config.server.dev.https
+    };
+
+    serverConfig.https.tls = config.tls;
     secret = config.auth.dev;
 } else if (env === 'prod') {
     mongoURL = config.db.prod.url + config.db.prod.port + config.db.prod.store;
-    serverConfig = config.server.prod;
+    serverConfig = {
+        http: config.server.prod.http,
+        https: config.server.prod.https
+    };
+
+    serverConfig.https.tls = config.tls;
     secret = config.auth.prod;
 }
 
 // server config
-server.connection(serverConfig);
+server.connection(serverConfig.http); // http
+server.connection(serverConfig.https) // https
+
+// redirect all http to https
+server.register({
+    register: require('hapi-require-https'),
+    options: {
+        proxy: false
+    }
+});
+
 server.register(require('hapi-auth-jwt2'), function (err) {
     if (err) console.log(err);
 
@@ -56,5 +76,6 @@ server.start((err) => {
         throw err;
     }
 
-    console.log(`Server running at: ${server.info.uri}`);
+    console.log('Server running...');
+    // console.log(`Server running at: ${server.info.uri}`);
 });
