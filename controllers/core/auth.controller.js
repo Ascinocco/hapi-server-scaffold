@@ -1,5 +1,5 @@
-let authMiddleware = require('../middleware/auth.middleware.js');
-let User = require('../models/user.js');
+let authMiddleware = require('../../middleware/auth.middleware.js');
+let Models = require('../../models/models.js');
 
 module.exports = {
     signUp (request, reply) {
@@ -15,7 +15,7 @@ module.exports = {
             email: 'anthony@mail.com'
         };
 
-        User.findOne({ email: user.email }, function (err, user) {
+        Models.User.findOne({ email: user.email }, function (err, user) {
             if (err) throw err;
 
             user.comparePassword('password123!', function (err, isMatch) {

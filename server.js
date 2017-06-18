@@ -5,9 +5,9 @@ let mongoose = require('mongoose');
 let env = process.env.NODE_ENV || 'dev';
 
 const config = require('./config.js');
-const authRoutes = require('./routes/auth.routes.js');
-const userRoutes = require('./routes/user.routes.js');
-const indexRoutes = require('./routes/index.routes.js');
+const authRoutes = require('./routes/core/auth.routes.js');
+const userRoutes = require('./routes/core/user.routes.js');
+const indexRoutes = require('./routes/core/index.routes.js');
 let authMiddleware = require('./middleware/auth.middleware.js');
 
 const Hapi = require('hapi');

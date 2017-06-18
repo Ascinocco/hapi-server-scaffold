@@ -1,4 +1,4 @@
-let User = require('../models/user.js');
+let Models = require('../../models/models.js');
 
 module.exports = {
     index (request, reply) {
@@ -17,7 +17,7 @@ module.exports = {
 
     pwCompare (request, reply) {
 
-        User.findOne({email: 'anthony@mail.com'}, (err, user) => {
+        Models.User.findOne({email: 'anthony@mail.com'}, (err, user) => {
             let pw = 'password1234!';
             user.comparePassword(pw, (err, isMatch) => {
                 reply(isMatch);

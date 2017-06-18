@@ -1,9 +1,9 @@
 let moment = require('moment');
 let JWT = require('jsonwebtoken');
 let config = require('../config.js');
-let User = require('../models/user.js');
-let hapiAuthJWT = require('hapi-auth-jwt2');
 let env = process.env.NODE_ENV || 'dev';
+let Models = require('../models/models.js');
+let hapiAuthJWT = require('hapi-auth-jwt2');
 
 module.exports = {
     //TODO: add if for checking the env or find a more programtic way to handle this
@@ -25,7 +25,7 @@ module.exports = {
         } else {
             let token = JWT.sign(user.toJSON(), secret);
             
-            User.findOneAndUpdate({ email: user.email},
+            Models.User.findOneAndUpdate({ email: user.email},
             {
                 $set: {
                     'token.value': token,
@@ -45,7 +45,7 @@ module.exports = {
 
     revokeToken (request, callback) {
         const token = request.headers.authorization;
-        User.findOneAndUpdate({ 'token.value': token }, {
+        Models.User.findOneAndUpdate({ 'token.value': token }, {
             $set: {
                 'token.value': '',
                 'token.expiresAt': null
@@ -60,7 +60,7 @@ module.exports = {
     validate (decoded, request, callback) {
         const token = request.headers.authorization;
 
-        User.findOne({ 'token.value': token }, function (err, user) {
+        Models.User.findOne({ 'token.value': token }, function (err, user) {
             if (err) return callback(err);
             if (!user) return callback(null, false);
 

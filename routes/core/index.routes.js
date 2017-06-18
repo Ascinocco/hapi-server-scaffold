@@ -1,4 +1,4 @@
-let IndexController = require('../controllers/index.controller.js');
+let IndexController = require('../../controllers/core/index.controller.js');
 
 module.exports = [
     {

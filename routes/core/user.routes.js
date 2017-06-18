@@ -1,4 +1,4 @@
-let UserController = require('../controllers/user.controller.js');
+let UserController = require('../../controllers/core/user.controller.js');
 
 module.exports = [
     {
