@@ -44,6 +44,15 @@ userSchema.methods.comparePassword = function (candidatePassword, callback) {
     });
 };
 
+userSchema.methods.toJSON = function () {
+    let user = this;
+    let userObj = user.toObjecT();
+    delete userObj['password'];
+    delete userObj['token'];
+    delete userObj['updatedAt'];
+    return userObj;
+};
+
 userSchema.statics.hashPassword = function (passwordToHash, callback) {
     bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
         if (err) return callback(err);

@@ -17,7 +17,6 @@ module.exports = {
         }
 
         let token = JWT.sign(user, secret);
-        // console.log(token);
         
         User.findOneAndUpdate({ email: user.email},
         {
@@ -37,7 +36,8 @@ module.exports = {
     },
 
     revokeToken (request, user, callback) {
-        User.findOneAndUpdate({ email: user.email }, {
+        const token = request.headers.authorization;
+        User.findOneAndUpdate({ 'token.value': token }, {
             $set: {
                 'token.value': '',
                 'token.expiresAt': null
