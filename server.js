@@ -2,7 +2,7 @@
 
 // imports
 let mongoose = require('mongoose');
-let config = require('./bootstrap.js');
+let config = require('./config/bootstrap.js');
 let routes = require('./routes/routes.js');
 let authMiddleware = require('./middleware/auth.middleware.js');
 
