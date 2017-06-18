@@ -7,43 +7,51 @@ module.exports = {
             messsage: "You've reached the sign up route"
         };
 
-        reply(respone);
+        return reply(respone);
     },
 
     signIn (request, reply) {
-        let user = {
-            email: 'anthony@mail.com'
-        };
+        let user = request.payload;
 
         Models.User.findOne({ email: user.email }, function (err, user) {
-            if (err) throw err;
+            if (err) {
+                return reply({
+                    message: "We could not find you",
+                    success: false
+                });
+            }
 
             user.comparePassword('password123!', function (err, isMatch) {
-                if (err) throw err;
+                if (err) {
+                    return reply({
+                        message: "We had an error while trying to validate your password",
+                        success: false
+                    })
+                }
 
                 if (isMatch) {
                     authMiddleware.assignToken(user, function (err, user) {
-                        if (err) throw err;
-                        
-                        let response = {
-                            messsage: "You've reached the sign in route",
-                            user: user,
-                            err: err
-                        };
+                        if (err) {
+                            return reply({
+                                message: "We had an error while trying to log you in",
+                                success: false
+                            });
+                        }
 
-                        reply(response);
+                        return reply({
+                            message: "Welcome Back!",
+                            success: true,
+                            user: user
+                        }).header('authorization', user.token.value);
                     });
                 } else {
-                    let response = {
-                        message: "Invalid Credentials"
-                    }
-
-                    reply(response);
+                    return reply({
+                        message: "Incorrect Password",
+                        success: false
+                    });
                 }
             });
-        });
-        
-        
+        }); 
     },
 
     signOut (request, reply) {
