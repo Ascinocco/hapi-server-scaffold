@@ -2,6 +2,7 @@ let Models = require('../../models/models.js');
 
 module.exports = {
     // get all users
+    // TODO: restrict to admins only
     index (request, reply) {
         Models.User.find({}, function (err , users) {
             if (err) {
@@ -32,6 +33,7 @@ module.exports = {
     },
 
     // save new user
+    // TODO: restrict to admins only
     store (request, reply) {
         let accountInfo = request.payload;
 
@@ -70,16 +72,20 @@ module.exports = {
     },
 
     // show specific user
+    // TODO: only account owners and admins should be able to drill down into
+    // specific account details
     show (request, reply) {
 
     },
 
     // update specific user
+    // TODO: only account owners and admins should be able to update an account
     update (request, reply) {
 
     },
 
     // destroy specific user
+    // TODO: only account owners and admins should be able to delete an account
     destroy (request, reply) {
 
     }
