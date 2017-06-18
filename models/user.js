@@ -46,10 +46,11 @@ userSchema.methods.comparePassword = function (candidatePassword, callback) {
 
 userSchema.methods.toJSON = function () {
     let user = this;
-    let userObj = user.toObjecT();
+    let userObj = user.toObject();
     delete userObj['password'];
-    delete userObj['token'];
+    delete userObj['token']['expiresAt'];
     delete userObj['updatedAt'];
+    delete userObj['createdAt'];
     return userObj;
 };
 

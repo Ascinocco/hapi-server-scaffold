@@ -7,7 +7,7 @@ let env = process.env.NODE_ENV || 'dev';
 
 module.exports = {
     //TODO: add if for checking the env or find a more programtic way to handle this
-    assignToken (request, user, callback) {
+    assignToken (user, callback) {
         let secret = '';
 
         if (env == 'dev') {
@@ -16,23 +16,31 @@ module.exports = {
             secret = config.auth.prod.secret;
         }
 
-        let token = JWT.sign(user, secret);
-        
-        User.findOneAndUpdate({ email: user.email},
-        {
-            $set: {
-                'token.value': token,
-                'token.expiresAt': moment()
+        if (user.token.expiresAt) {
+            let expireTime = moment(user.token.expiresAt);
+
+            if (expireTime.isBefore(moment())) {
+                return callback(null, user.toJSON(), user.token.value)
             }
-        },
-        {
-            new: true
-        },
-        function (err, user) {
-            if (err) return callback(err);
+        } else {
+            let token = JWT.sign(user.toJSON(), secret);
             
-            return callback(null, user);
-        });
+            User.findOneAndUpdate({ email: user.email},
+            {
+                $set: {
+                    'token.value': token,
+                    'token.expiresAt': moment()
+                }
+            },
+            {
+                new: true
+            },
+            function (err, user) {
+                if (err) return callback(err);
+                
+                return callback(null, user.toJSON(), user.token.value);
+            });
+        }
     },
 
     revokeToken (request, user, callback) {
