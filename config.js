@@ -31,6 +31,7 @@ module.exports = {
         prod: {
             url: '',
             port: '',
+            store: '',
             options: ''
         },
 
@@ -44,7 +45,7 @@ module.exports = {
 
     auth: {
         prod: {
-            secret: ''
+            secret: 'doNotSendThisSecretIntoProd'
         },
 
         dev: {

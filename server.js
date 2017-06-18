@@ -2,9 +2,9 @@
 
 // imports
 let mongoose = require('mongoose');
+const config = require('./config.js');
 let env = process.env.NODE_ENV || 'dev';
 
-const config = require('./config.js');
 const authRoutes = require('./routes/core/auth.routes.js');
 const userRoutes = require('./routes/core/user.routes.js');
 const indexRoutes = require('./routes/core/index.routes.js');
@@ -68,7 +68,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
 });
 
 mongoose.connect(mongoURL);
-console.log(mongoURL);
+console.log('MongoDB on:  \t' + mongoURL);
 
 // start server
 server.start((err) => {
@@ -76,6 +76,6 @@ server.start((err) => {
         throw err;
     }
 
-    console.log('Server running...');
-    // console.log(`Server running at: ${server.info.uri}`);
+    console.log('Hapi http on: \t' + 'http://' + serverConfig.http.host + ':' + serverConfig.http.port);
+    console.log('Hapi https on: \t' + 'https://' + serverConfig.https.host + ':' + serverConfig.https.port);
 });
