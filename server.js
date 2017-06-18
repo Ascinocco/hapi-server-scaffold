@@ -35,7 +35,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
 
     let options = {
         key: secret,
-        validateFunc: authMiddleware.validateToken,
+        verifyFunc: authMiddleware.validate,
         verifyOptions: { algorithms: [ 'HS256' ] }
     };
 

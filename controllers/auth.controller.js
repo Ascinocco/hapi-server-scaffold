@@ -21,7 +21,7 @@ module.exports = {
                 err: err
             };
 
-            console.log(user);
+            // console.log(user);
 
             reply(respone);
         });

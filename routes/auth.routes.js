@@ -4,7 +4,7 @@ module.exports = [
     {
         method: 'POST',
         path: '/sign-up',
-        config: { auth: 'jwt' },
+        config: { auth: false },
         handler: AuthController.signUp
     },
 
