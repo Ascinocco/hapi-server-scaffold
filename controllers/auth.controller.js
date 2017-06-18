@@ -47,6 +47,17 @@ module.exports = {
     },
 
     signOut (request, reply) {
-        User.find
+        authMiddleware.revokeToken(request, function (err, success) {
+            if (err) throw err;
+
+            if (success) {
+                let response = {
+                    message: "You have been signed out!",
+                    success: true
+                };
+
+                reply(response);
+            }
+        });
     }
 };

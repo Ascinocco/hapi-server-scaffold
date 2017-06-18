@@ -20,7 +20,7 @@ module.exports = {
             let expireTime = moment(user.token.expiresAt);
 
             if (expireTime.isBefore(moment())) {
-                return callback(null, user.toJSON(), user.token.value)
+                return callback(null, user.toJSON())
             }
         } else {
             let token = JWT.sign(user.toJSON(), secret);
@@ -38,12 +38,12 @@ module.exports = {
             function (err, user) {
                 if (err) return callback(err);
                 
-                return callback(null, user.toJSON(), user.token.value);
+                return callback(null, user.toJSON());
             });
         }
     },
 
-    revokeToken (request, user, callback) {
+    revokeToken (request, callback) {
         const token = request.headers.authorization;
         User.findOneAndUpdate({ 'token.value': token }, {
             $set: {
@@ -59,8 +59,9 @@ module.exports = {
 
     validate (decoded, request, callback) {
         const token = request.headers.authorization;
+
         User.findOne({ 'token.value': token }, function (err, user) {
-            if (err) return callback(err);
+            if (err) return callback(err, null);
 
             if (user.token.value == '' || user.token.expiresAt == null) {
                 return callback(null, false);
