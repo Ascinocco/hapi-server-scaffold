@@ -7,11 +7,17 @@ let routes = require('./routes/routes.js');
 let authMiddleware = require('./middleware/auth.middleware.js');
 
 const Hapi = require('hapi');
-const server = new Hapi.Server(config.hapi);
+const server = new Hapi.Server();
 
 // server config
 server.connection(config.server.http); // http
 server.connection(config.server.https) // https
+
+// register cors
+server.register({
+    register: require('hapi-cors'),
+    options: config.cors
+});
 
 // redirect all http to https
 server.register({
@@ -21,6 +27,7 @@ server.register({
     }
 });
 
+// register token auth config
 server.register(require('hapi-auth-jwt2'), function (err) {
     if (err) console.log(err);
 

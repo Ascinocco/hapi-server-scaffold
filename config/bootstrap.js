@@ -25,7 +25,7 @@ if (env === 'dev') {
 }
 
 module.exports = {
-    hapi: config.hapi,
+    cors: config.cors,
     mongoURL: mongoURL,
     server: serverConfig,
     secret: secret
