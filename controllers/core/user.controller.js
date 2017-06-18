@@ -1,29 +1,53 @@
 let Models = require('../../models/models.js');
 
 module.exports = {
-    index(request, reply) {
-        let anthony = new User({
-            name: 'Anthony Scinocco',
-            email: 'anthony@mail.com',
-            password: 'password123!'
-        });
+    // get all users
+    index (request, reply) {
+        Models.User.find({}, function (err , users) {
+            if (err) {
+                return reply({
+                    message: "An error occured retrieving all users",
+                    success: false
+                });
+            }
 
-        anthony.save((err) => {
-            if (err) throw err;
+            let userObjs = [];
+            // remove token from results
+            for (let i = 0; i < users.length; i++) {
+                userObjs.push(users[i].toObject());
+            }
 
-            reply(anthony);
+            let cleanedUsers = [];
+            for (let x = 0; x < userObjs.length; x++) {
+                delete userObjs[x]['password'];
+                delete userObjs[x]['token'];
+                cleanedUsers.push(userObjs[x]);
+            }
+
+            return reply({
+                users: cleanedUsers,
+                success: true
+            });
         });
     },
 
-    pwCompare(request, reply) {
+    // save new user
+    store (request, reply) {
 
-        Models.User.findOne({
-            email: 'anthony@mail.com'
-        }, (err, user) => {
-            let pw = 'password1234!';
-            user.comparePassword(pw, (err, isMatch) => {
-                reply(isMatch);
-            });
-        });
+    },
+
+    // show specific user
+    show (request, reply) {
+
+    },
+
+    // update specific user
+    update (request, reply) {
+
+    },
+
+    // destroy specific user
+    destroy (request, reply) {
+
     }
 };
