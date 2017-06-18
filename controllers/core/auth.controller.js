@@ -100,15 +100,23 @@ module.exports = {
 
     signOut(request, reply) {
         authMiddleware.revokeToken(request, function (err, success) {
-            if (err) throw err;
+            if (err) {
+                return reply({
+                    message: "We had an error logging you out",
+                    success: false
+                });
+            }
 
             if (success) {
-                let response = {
-                    message: "You have been signed out!",
+                return reply({
+                    message: "Goodbye :)",
                     success: true
-                };
-
-                reply(response);
+                });
+            } else {
+                return reply({
+                    message: "We messed up logging you out, sorry about that",
+                    success: false
+                });
             }
         });
     }
