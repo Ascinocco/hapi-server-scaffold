@@ -4,7 +4,7 @@ module.exports = [
     {
         method: 'GET',
         path: '/create-user',
-        config: { auth: 'jwt' },
+        config: { auth: false },
         handler: UserController.index
     },
 

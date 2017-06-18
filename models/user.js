@@ -1,4 +1,5 @@
 let mongoose = require('mongoose');
+let moment = require('moment');
 let Schema = mongoose.Schema;
 let bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
@@ -14,8 +15,8 @@ let userSchema = new Schema({
         expiresAt: { type: Date }
     },
 
-    createdAt: { type: Date, required: true, default: Date.now },
-    updatedAt: { type: Date, required: true, default: Date.now }
+    createdAt: { type: Date, required: true, default: moment() },
+    updatedAt: { type: Date, required: true, default: moment() }
 });
 
 userSchema.pre('save', function (next) {

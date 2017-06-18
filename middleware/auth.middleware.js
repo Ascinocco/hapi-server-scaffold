@@ -1,8 +1,10 @@
+let moment = require('moment');
 let JWT = require('jsonwebtoken');
 let config = require('../config.js');
 let User = require('../models/user.js');
 let hapiAuthJWT = require('hapi-auth-jwt2');
 let env = process.env.NODE_ENV || 'dev';
+
 module.exports = {
     //TODO: add if for checking the env or find a more programtic way to handle this
     assignToken (request, user, callback) {
@@ -21,7 +23,7 @@ module.exports = {
         {
             $set: {
                 'token.value': token,
-                'token.expiresAt': Date.now()
+                'token.expiresAt': moment()
             }
         },
         {
@@ -49,25 +51,27 @@ module.exports = {
 
     validate (decoded, request, callback) {
         const token = request.headers.authorization;
-        console.log(token);
         User.findOne({ 'token.value': token }, function (err, user) {
             if (err) return callback(err);
 
-            return callback(null, true);
+            if (user.token.value == '' || user.token.expiresAt == null) {
+                return callback(null, false);
+            }
 
-            // if (user.token.value == '' || user.token.expiresAt == null) {
-            //     return callback(null, false);
-            // }
+            // convert stored time in db to moment time and compare
+            let expireTime = moment(user.token.expiresAt);
 
-            // if (user.token.expiresAt > Date.now) {
-            //     return callback(null, true);
-            // } else {
-            //     user.token.value = '';
-            //     user.expiresAt = null;
-            //     user.save(function (err) {
-            //         return callback(null, false);
-            //     });
-            // }
+            if (expireTime.isBefore(moment())) {
+                return callback(null, true)
+            } else {
+                user.token.value = '';
+                user.token.expiresAt = null;
+                user.save(function (err) {
+                    // return false regardless of error
+                    // as we know the token is invalid at this point
+                    return callback(err, false);
+                });
+            }
         });
     }
 };
