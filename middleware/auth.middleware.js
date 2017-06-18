@@ -45,7 +45,7 @@ module.exports = {
         }, function (err) {
             if (err) return callback(err);
 
-            return callback(null, false);
+            return callback(null, true);
         });
     },
 
