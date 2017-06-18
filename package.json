@@ -7,6 +7,7 @@
     "bcrypt": "^1.0.2",
     "hapi": "^16.4.3",
     "hapi-auth-jwt2": "^7.2.4",
+    "jsonwebtoken": "^7.4.1",
     "mongoose": "^4.10.6",
     "nodemon": "^1.11.0"
   }

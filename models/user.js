@@ -11,7 +11,7 @@ let userSchema = new Schema({
 
     token: {
         value: { type: String, default: '' },
-        expiresAt: { type: String }
+        expiresAt: { type: Date }
     },
 
     createdAt: { type: Date, required: true, default: Date.now },

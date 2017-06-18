@@ -1,7 +1,14 @@
 module.exports = {
     server: {
-        port: 3000,
-        host: 'localhost'
+        prod: {
+            port: 80,
+            host: ''
+        },
+
+        dev: {
+            port: 3000,
+            host: 'localhost'
+        }
     },
 
     db: {
@@ -16,6 +23,16 @@ module.exports = {
             port: ':27017',
             store: '/hapiExample',
             options: ''
+        }
+    },
+
+    auth: {
+        prod: {
+            secret: ''
+        },
+
+        dev: {
+            secret: 'ChangeTheSecretBeforeUsingThisPls'
         }
     }
 };
