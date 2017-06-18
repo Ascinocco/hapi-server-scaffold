@@ -61,7 +61,8 @@ module.exports = {
         const token = request.headers.authorization;
 
         User.findOne({ 'token.value': token }, function (err, user) {
-            if (err) return callback(err, null);
+            if (err) return callback(err);
+            if (!user) return callback(null, false);
 
             if (user.token.value == '' || user.token.expiresAt == null) {
                 return callback(null, false);
