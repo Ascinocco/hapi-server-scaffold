@@ -5,6 +5,7 @@ let mongoose = require('mongoose');
 
 const config = require('./config.js');
 const authRoutes = require('./routes/auth.routes.js');
+const userRoutes = require('./routes/user.routes.js');
 const indexRoutes = require('./routes/index.routes.js');
 
 const Hapi = require('hapi');
@@ -12,8 +13,9 @@ const server = new Hapi.Server();
 
 // server config
 server.connection(config.server);
-server.route(indexRoutes);
 server.route(authRoutes);
+server.route(userRoutes);
+server.route(indexRoutes);
 
 // database config
 let env = process.env.NODE_ENV || 'dev';

@@ -4,6 +4,7 @@
     "start": "nodemon ./server.js"
   },
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "hapi": "^16.4.3",
     "hapi-auth-jwt2": "^7.2.4",
     "mongoose": "^4.10.6",
