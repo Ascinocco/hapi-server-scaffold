@@ -1,6 +1,6 @@
 let moment = require('moment');
 let JWT = require('jsonwebtoken');
-let config = require('../config.js');
+let config = require('../config/config.js');
 let env = process.env.NODE_ENV || 'dev';
 let Models = require('../models/models.js');
 let hapiAuthJWT = require('hapi-auth-jwt2');

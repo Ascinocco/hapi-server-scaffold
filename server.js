@@ -2,7 +2,7 @@
 
 // imports
 let mongoose = require('mongoose');
-const config = require('./config.js');
+const config = require('./config/config.js');
 let env = process.env.NODE_ENV || 'dev';
 
 const authRoutes = require('./routes/core/auth.routes.js');
@@ -25,7 +25,7 @@ if (env === 'dev') {
         https: config.server.dev.https
     };
 
-    serverConfig.https.tls = config.tls;
+    // serverConfig.https.tls = config.tls;
     secret = config.auth.dev;
 } else if (env === 'prod') {
     mongoURL = config.db.prod.url + config.db.prod.port + config.db.prod.store;
@@ -34,7 +34,7 @@ if (env === 'dev') {
         https: config.server.prod.https
     };
 
-    serverConfig.https.tls = config.tls;
+    // serverConfig.https.tls = config.tls;
     secret = config.auth.prod;
 }
 
