@@ -1,5 +1,5 @@
 module.exports = {
-    index (request, reply) {
+    index(request, reply) {
         reply('Hello World!');
     }
 }

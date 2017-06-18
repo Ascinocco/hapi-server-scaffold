@@ -2,18 +2,62 @@ let authMiddleware = require('../../middleware/auth.middleware.js');
 let Models = require('../../models/models.js');
 
 module.exports = {
-    signUp (request, reply) {
-        let respone = {
-            messsage: "You've reached the sign up route"
-        };
+    signUp(request, reply) {
+        let accountInfo = request.payload;
+        Models.User.findOne({
+            email: accountInfo.email
+        }, function (err, user) {
+            if (err) {
+                return reply({
+                    message: "We experienced an error trying to create your account",
+                    success: false,
+                    err: err
+                });
+            }
 
-        return reply(respone);
+            if (user) {
+                return reply({
+                    message: "The email you provided is already in use",
+                    success: false
+                });
+            } else {
+                let newUser = new Models.User(accountInfo);
+
+                newUser.save(function (err) {
+                    if (err) {
+                        return reply({
+                            message: "An error occured creating your account",
+                            success: false,
+                            err: err
+                        });
+                    }
+
+                    authMiddleware.assignToken(newUser, function (err, user) {
+                        if (err) {
+                            return reply({
+                                message: "You're account has been created, but an error occured logging you in",
+                                success: false,
+                                err: err
+                            });
+                        }
+
+                        return reply({
+                            message: "Welcome!",
+                            success: true,
+                            user: user
+                        }).header('authorization', user.token.value);
+                    });
+                });
+            }
+        });
     },
 
-    signIn (request, reply) {
-        let user = request.payload;
+    signIn(request, reply) {
+        let credentials = request.payload;
 
-        Models.User.findOne({ email: user.email }, function (err, user) {
+        Models.User.findOne({
+            email: credentials.email
+        }, function (err, user) {
             if (err) {
                 return reply({
                     message: "We could not find you",
@@ -51,10 +95,10 @@ module.exports = {
                     });
                 }
             });
-        }); 
+        });
     },
 
-    signOut (request, reply) {
+    signOut(request, reply) {
         authMiddleware.revokeToken(request, function (err, success) {
             if (err) throw err;
 

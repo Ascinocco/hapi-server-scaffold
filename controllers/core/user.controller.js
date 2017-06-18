@@ -1,7 +1,7 @@
 let Models = require('../../models/models.js');
 
 module.exports = {
-    index (request, reply) {
+    index(request, reply) {
         let anthony = new User({
             name: 'Anthony Scinocco',
             email: 'anthony@mail.com',
@@ -15,9 +15,11 @@ module.exports = {
         });
     },
 
-    pwCompare (request, reply) {
+    pwCompare(request, reply) {
 
-        Models.User.findOne({email: 'anthony@mail.com'}, (err, user) => {
+        Models.User.findOne({
+            email: 'anthony@mail.com'
+        }, (err, user) => {
             let pw = 'password1234!';
             user.comparePassword(pw, (err, isMatch) => {
                 reply(isMatch);
