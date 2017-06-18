@@ -2,45 +2,16 @@
 
 // imports
 let mongoose = require('mongoose');
-const config = require('./config/config.js');
-let env = process.env.NODE_ENV || 'dev';
-
-const authRoutes = require('./routes/core/auth.routes.js');
-const userRoutes = require('./routes/core/user.routes.js');
-const indexRoutes = require('./routes/core/index.routes.js');
+let config = require('./bootstrap.js');
+let routes = require('./routes/routes.js');
 let authMiddleware = require('./middleware/auth.middleware.js');
 
 const Hapi = require('hapi');
 const server = new Hapi.Server();
 
-// basic configuration
-let secret = '';
-let mongoURL = '';
-let serverConfig = {};
-
-if (env === 'dev') {
-    mongoURL = config.db.dev.url + config.db.dev.port + config.db.dev.store;
-    serverConfig = {
-        http: config.server.dev.http,
-        https: config.server.dev.https
-    };
-
-    // serverConfig.https.tls = config.tls;
-    secret = config.auth.dev;
-} else if (env === 'prod') {
-    mongoURL = config.db.prod.url + config.db.prod.port + config.db.prod.store;
-    serverConfig = {
-        http: config.server.prod.http,
-        https: config.server.prod.https
-    };
-
-    // serverConfig.https.tls = config.tls;
-    secret = config.auth.prod;
-}
-
 // server config
-server.connection(serverConfig.http); // http
-server.connection(serverConfig.https) // https
+server.connection(config.server.http); // http
+server.connection(config.server.https) // https
 
 // redirect all http to https
 server.register({
@@ -54,7 +25,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     if (err) console.log(err);
 
     let options = {
-        key: secret,
+        key: config.secret,
         verifyFunc: authMiddleware.validate,
         verifyOptions: { algorithms: [ 'HS256' ] }
     };
@@ -62,13 +33,14 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     server.auth.strategy('jwt', 'jwt', options);
     server.auth.default('jwt');
 
-    server.route(authRoutes);
-    server.route(userRoutes);
-    server.route(indexRoutes);
+    // loads all routes
+    for (let i = 0; i < routes.length; i++) {
+        server.route(routes[i]);
+    }
 });
 
-mongoose.connect(mongoURL);
-console.log('MongoDB on:  \t' + mongoURL);
+mongoose.connect(config.mongoURL);
+console.log('MongoDB on:  \t' + config.mongoURL);
 
 // start server
 server.start((err) => {
@@ -76,6 +48,6 @@ server.start((err) => {
         throw err;
     }
 
-    console.log('Hapi http on: \t' + 'http://' + serverConfig.http.host + ':' + serverConfig.http.port);
-    console.log('Hapi https on: \t' + 'https://' + serverConfig.https.host + ':' + serverConfig.https.port);
+    console.log('Hapi http on: \t' + 'http://' + config.server.http.host + ':' + config.server.http.port);
+    console.log('Hapi https on: \t' + 'https://' + config.server.https.host + ':' + config.server.https.port);
 });
