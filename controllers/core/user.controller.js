@@ -33,7 +33,40 @@ module.exports = {
 
     // save new user
     store (request, reply) {
+        let accountInfo = request.payload;
 
+        Models.User.findOne({ email: accountInfo.email }, function (err, user) {
+            if (err) {
+                return reply({
+                    message: "We occured an error while trying to create the new user",
+                    success: false
+                });
+            }
+
+            if (user) {
+                return reply({
+                    message: "The email you entered is already in use",
+                    success: false
+                });
+            } else {
+                let newUser = new Models.User(accountInfo);
+
+                newUser.save(function (err) {
+                    if (err) {
+                        return reply({
+                            message: "An error occured creating the new account",
+                            success: false
+                        });
+                    }
+
+                    return reply({
+                        message: "User Created",
+                        success: true,
+                        user: newUser.toJSON()
+                    });
+                });
+            }
+        });
     },
 
     // show specific user

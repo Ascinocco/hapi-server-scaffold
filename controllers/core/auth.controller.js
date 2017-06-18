@@ -11,7 +11,6 @@ module.exports = {
                 return reply({
                     message: "We experienced an error trying to create your account",
                     success: false,
-                    err: err
                 });
             }
 
@@ -28,7 +27,6 @@ module.exports = {
                         return reply({
                             message: "An error occured creating your account",
                             success: false,
-                            err: err
                         });
                     }
 
@@ -37,7 +35,6 @@ module.exports = {
                             return reply({
                                 message: "You're account has been created, but an error occured logging you in",
                                 success: false,
-                                err: err
                             });
                         }
 
