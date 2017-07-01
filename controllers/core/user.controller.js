@@ -75,7 +75,29 @@ module.exports = {
     // TODO: only account owners and admins should be able to drill down into
     // specific account details
     show (request, reply) {
+        let userId = request.params.user_id; // get user id from url
 
+        Models.User.findOne({ _id: userId }, function(err, user) {
+            if (err) {
+                return reply({
+                    message: "We occured an error while trying to find the user you asked for",
+                    success: false
+                });
+            }
+
+            if (!user) {
+                return reply({
+                    message: "We couldn't find the user you asked for",
+                    success: false
+                });
+            } else {
+                return reply({
+                    message: "Found the user!",
+                    success: true,
+                    user: user.toJSON()
+                });
+            }
+        });
     },
 
     // update specific user
