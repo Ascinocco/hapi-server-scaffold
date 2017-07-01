@@ -102,8 +102,37 @@ module.exports = {
 
     // update specific user
     // TODO: only account owners and admins should be able to update an account
+    // TODO: Updates not actually happening although input data appears to be correct
     update (request, reply) {
+        let userId = request.params.user_id;
+        let updates = request.payload;
 
+        console.log(updates);
+
+        Models.User.findOneAndUpdate({ _id: userId },
+        { $set: { updates } }, 
+        { new: true },
+        function (err, user) {
+            if (err) {
+                return reply({
+                    message: "An error occured looking for the account to update",
+                    success: false
+                });
+            }
+
+            if (!user) {
+                return reply({
+                    message: "We couldn't find the account you want to update",
+                    success: false
+                });
+            } else {
+                return reply({
+                    message: "Account updated!",
+                    success: true,
+                    user: user.toJSON()
+                });
+            }
+        });
     },
 
     // destroy specific user
